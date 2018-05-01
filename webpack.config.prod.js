@@ -5,7 +5,8 @@ import ExtractTextPlugin from "extract-text-webpack-plugin"
 import packageJson from "./package";
 
 export default {
-	// devtool: "source-map", //uncomment for generation sources map for prod
+	mode: "production",
+	stats: "minimal",
 	entry: {
 		main: path.resolve(__dirname, "src/main"),
 		vendor: path.resolve(__dirname, "src/vendor")
@@ -32,7 +33,7 @@ export default {
 		new WebpackMd5Hash(),
 
 		//Generate external css
-		new ExtractTextPlugin('[name].[contenthash].css'),
+		new ExtractTextPlugin('[name].[hash].css'),
 
 		//Generate index.html from template
 		new HtmlWebpackPlugin({
@@ -57,17 +58,19 @@ export default {
 				version: packageJson.version
 			},
 		}),
-
-		//Minify code
-		// new webpack.optimize.UglifyJsPlugin(),
 	],
 	module: {
 		rules: [
-			{test: /\.js$/, exclude: /node_modules/, use: "babel-loader"},
 			{
-				test: /\.(s*)css$/, use: ExtractTextPlugin.extract({
-					fallback: 'style-loader',
-					use: ['css-loader', 'sass-loader']
+				test: /\.js$/,
+				exclude: /node_modules/,
+				use: "babel-loader"
+			},
+			{
+				test: /\.(s*)css$/,
+				use: ExtractTextPlugin.extract({
+					fallback: "style-loader",
+					use: ["css-loader", 'sass-loader']
 				})
 			}
 		]

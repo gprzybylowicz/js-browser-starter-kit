@@ -2,4 +2,4 @@
 
 import chalk from "chalk";
 
-console.log(chalk.green("Starting dev enviroment"));
+console.log(chalk.green("Starting dev...."));

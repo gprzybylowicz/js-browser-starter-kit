@@ -7,7 +7,7 @@ export default {
 	devtool: "inline-source-map",
 	entry: [
 		path.resolve(__dirname, "src/main"),
-		'webpack-hot-middleware/client' //for hot reload
+		'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000",' //for hot reload
 	],
 	target: "web",
 	output: {
@@ -26,8 +26,15 @@ export default {
 
 	module: {
 		rules: [
-			{test: /\.js$/, exclude: /node_modules/, use: "babel-loader"},
-			{test: /\.(s*)css$/, use: ["style-loader", "css-loader", 'sass-loader']}
+			{
+				test: /\.js$/,
+				exclude: /node_modules/,
+				use: "babel-loader"
+			},
+			{
+				test: /\.(s*)css$/,
+				use: ["style-loader", "css-loader", 'sass-loader']
+			}
 		]
 	}
 };
