@@ -3,9 +3,8 @@ import webpack from "webpack";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 
 export default {
-	debug: true,
+	mode: "development",
 	devtool: "inline-source-map",
-	noInfo: false,
 	entry: [
 		path.resolve(__dirname, "src/main"),
 		'webpack-hot-middleware/client' //for hot reload
@@ -26,9 +25,9 @@ export default {
 	],
 
 	module: {
-		loaders: [
-			{test: /\.js$/, exclude: /node_modules/, loaders: ["babel"]},
-			{test: /\.(s*)css$/, loaders: ["style", "css", 'sass']}
+		rules: [
+			{test: /\.js$/, exclude: /node_modules/, use: "babel-loader"},
+			{test: /\.(s*)css$/, use: ["style-loader", "css-loader", 'sass-loader']}
 		]
 	}
 };

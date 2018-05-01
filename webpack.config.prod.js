@@ -1,14 +1,11 @@
 import path from "path";
-import webpack from "webpack";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import WebpackMd5Hash from "webpack-md5-hash";
 import ExtractTextPlugin from "extract-text-webpack-plugin"
 import packageJson from "./package";
 
 export default {
-	debug: true,
 	// devtool: "source-map", //uncomment for generation sources map for prod
-	noInfo: false,
 	entry: {
 		main: path.resolve(__dirname, "src/main"),
 		vendor: path.resolve(__dirname, "src/vendor")
@@ -17,6 +14,18 @@ export default {
 	output: {
 		path: path.resolve(__dirname, "bin"),
 		filename: "[name].[chunkhash].js"
+	},
+	optimization: {
+		splitChunks: {
+			cacheGroups: {
+				vendor: {
+					chunks: "initial",
+					test: "vendor",
+					name: "vendor",
+					enforce: true
+				}
+			}
+		}
 	},
 	plugins: [
 		//Hash files
@@ -49,22 +58,18 @@ export default {
 			},
 		}),
 
-		// Use CommonsChunkPlugin to create a separate bundle
-		// of vendor libraries so that they're cached separately.
-		new webpack.optimize.CommonsChunkPlugin({
-			name: 'vendor'
-		}),
-
-		// Eliminate duplicate packages when generating bundle
-		new webpack.optimize.DedupePlugin(),
-
 		//Minify code
-		new webpack.optimize.UglifyJsPlugin(),
+		// new webpack.optimize.UglifyJsPlugin(),
 	],
 	module: {
-		loaders: [
-			{test: /\.js$/, exclude: /node_modules/, loaders: ["babel"]},
-			{test: /\.(s*)css$/, loader: ExtractTextPlugin.extract(["css", 'sass'])}
+		rules: [
+			{test: /\.js$/, exclude: /node_modules/, use: "babel-loader"},
+			{
+				test: /\.(s*)css$/, use: ExtractTextPlugin.extract({
+					fallback: 'style-loader',
+					use: ['css-loader', 'sass-loader']
+				})
+			}
 		]
 	}
 };
